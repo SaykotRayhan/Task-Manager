@@ -1,31 +1,15 @@
 const express = require('express');
+const { resolve } = require('path');
+
 const app = express();
-const tasks = require('./routes/tasks');
-const connectDB = require('./db/connect');
-require('dotenv').config();
-// const notFound = require('./middleware/not-found');
-// const errorHandlerMiddleware = require('./middleware/error-handler');
+const port = 3010;
 
-// middleware
-app.use(express.json());
+app.use(express.static('static'));
 
-// routes
+app.get('/', (req, res) => {
+  res.sendFile(resolve(__dirname, 'pages/index.html'));
+});
 
-app.use('/api/v1/tasks', tasks);
-
-// app.use(notFound);
-// app.use(errorHandlerMiddleware);
-const port = process.env.PORT || 5000;
-
-const start = async () => {
-  try {
-    await connectDB(process.env.MONGO_URI);
-    app.listen(port, () =>
-      console.log(`Server is listening on port ${port}...`)
-    );
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-start();
+app.listen(port, () => {
+  console.log(`Example app listening at http://localhost:${port}`);
+});
